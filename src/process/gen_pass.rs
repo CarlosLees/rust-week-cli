@@ -42,6 +42,7 @@ pub fn process_gen_pass(
 
     let password = String::from_utf8(password)?;
 
+    // 检查密码强度
     let estimate = zxcvbn::zxcvbn(&password, &[]);
 
     eprintln!("password source:{:?}", estimate.score());
