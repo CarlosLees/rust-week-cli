@@ -16,6 +16,8 @@ pub struct CliOptions {
 pub enum Subcommand {
     #[command(name = "csv", about = "把csv转化为json")]
     Csv(CsvOptions),
+    #[command(name = "gen_pass", about = "生成随机密码")]
+    GenPass(GenPassOptions),
 }
 
 #[derive(Debug, Parser)]
@@ -34,6 +36,24 @@ pub struct CsvOptions {
 
     #[arg(long, default_value_t = true)]
     header: bool,
+}
+
+#[derive(Debug, Parser)]
+pub struct GenPassOptions {
+    #[arg(short, long, default_value_t = 16)]
+    pub length: u8,
+
+    #[arg(long, default_value_t = true)]
+    pub uppercase: bool,
+
+    #[arg(long, default_value_t = true)]
+    pub lowercase: bool,
+
+    #[arg(long, default_value_t = true)]
+    pub number: bool,
+
+    #[arg(long, default_value_t = true)]
+    pub symbol: bool,
 }
 
 fn verify_format(format: &str) -> Result<Format, anyhow::Error> {
