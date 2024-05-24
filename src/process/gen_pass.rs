@@ -42,5 +42,8 @@ pub fn process_gen_pass(
 
     let password = String::from_utf8(password)?;
 
+    let estimate = zxcvbn::zxcvbn(&password, &[]);
+
+    eprintln!("password source:{:?}", estimate.score());
     Ok(password)
 }
