@@ -1,7 +1,9 @@
 use anyhow::Result;
 use clap::Parser;
+use cli_rust::cli::base64::Base64Subcommand;
+use cli_rust::cli::{CliOptions, Subcommand};
 use cli_rust::process::process_gen_pass;
-use cli_rust::{process_csv, CliOptions, Subcommand};
+use cli_rust::process_csv;
 
 fn main() -> Result<()> {
     let parse = CliOptions::parse();
@@ -24,6 +26,15 @@ fn main() -> Result<()> {
             )?;
             println!("{:?}", password)
         }
+        Subcommand::Base64(subcommand) => match subcommand {
+            Base64Subcommand::Encode(input) => {
+                println!("{:?}", input)
+            }
+
+            Base64Subcommand::Decode(input) => {
+                println!("{:?}", input)
+            }
+        },
     }
     Ok(())
 }

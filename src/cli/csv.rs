@@ -4,22 +4,6 @@ use std::fmt::{Display, Formatter};
 use std::path::Path;
 use std::str::FromStr;
 
-// cli csv -i input.csv -0 output.json
-#[derive(Debug, Parser)]
-#[command(name = "cli", version, author, about, long_about = None)]
-pub struct CliOptions {
-    #[command(subcommand)]
-    pub cmd: Subcommand,
-}
-
-#[derive(Debug, Parser)]
-pub enum Subcommand {
-    #[command(name = "csv", about = "把csv转化为json")]
-    Csv(CsvOptions),
-    #[command(name = "gen_pass", about = "生成随机密码")]
-    GenPass(GenPassOptions),
-}
-
 #[derive(Debug, Parser)]
 pub struct CsvOptions {
     #[arg(short,long,value_parser = verify_input_file)]
@@ -38,22 +22,12 @@ pub struct CsvOptions {
     header: bool,
 }
 
-#[derive(Debug, Parser)]
-pub struct GenPassOptions {
-    #[arg(short, long, default_value_t = 16)]
-    pub length: u8,
-
-    #[arg(long, default_value_t = true)]
-    pub uppercase: bool,
-
-    #[arg(long, default_value_t = true)]
-    pub lowercase: bool,
-
-    #[arg(long, default_value_t = true)]
-    pub number: bool,
-
-    #[arg(long, default_value_t = true)]
-    pub symbol: bool,
+pub fn verify_input_file(file: &str) -> anyhow::Result<String, &'static str> {
+    if file == "-" || Path::new(file).exists() {
+        Ok(file.into())
+    } else {
+        Err("文件不存在")
+    }
 }
 
 fn verify_format(format: &str) -> Result<Format, anyhow::Error> {
@@ -93,13 +67,5 @@ impl FromStr for Format {
             "yaml" => Ok(Format::Yaml),
             _ => Err(anyhow!("不支持此类型")),
         }
-    }
-}
-
-fn verify_input_file(file: &str) -> anyhow::Result<String, &'static str> {
-    if Path::new(file).exists() {
-        Ok(file.into())
-    } else {
-        Err("文件不存在")
     }
 }

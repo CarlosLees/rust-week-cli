@@ -1,5 +1,4 @@
-pub mod options;
+pub mod cli;
 pub mod process;
 
-pub use options::{CliOptions, Subcommand};
 pub use process::process_csv;
